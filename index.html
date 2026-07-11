@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>iOS 开发工程师 · 个人作品集</title>
+<meta name="description" content="资深 iOS 开发工程师作品集 —— 搜索、AI 导购、语音购、性能优化与工程化。" />
+<style>
+  /* ============ 设计系统 ============ */
+  :root{
+    --bg:#05060a;
+    --bg-soft:#0b0d16;
+    --card:#0f1220;
+    --card-2:#12162a;
+    --stroke:rgba(255,255,255,.08);
+    --stroke-strong:rgba(255,255,255,.16);
+    --text:#e8eaf2;
+    --muted:#9aa1b8;
+    --faint:#6b7290;
+    --brand:#7c5cff;
+    --brand-2:#22d3ee;
+    --brand-3:#f472b6;
+    --accent-grad:linear-gradient(120deg,#7c5cff 0%,#22d3ee 55%,#4ade80 100%);
+    --glow:0 0 0 1px rgba(255,255,255,.05), 0 20px 60px -20px rgba(124,92,255,.35);
+    --radius:22px;
+    --maxw:1180px;
+    --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--font);
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:rgba(124,92,255,.4)}
+
+  /* 背景光晕层 */
+  .bg-orbs{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
+  .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;animation:float 18s ease-in-out infinite}
+  .orb.a{width:520px;height:520px;background:#5b3cff;top:-160px;left:-120px}
+  .orb.b{width:460px;height:460px;background:#0891b2;top:30%;right:-140px;animation-delay:-6s}
+  .orb.c{width:420px;height:420px;background:#be185d;bottom:-160px;left:30%;animation-delay:-11s;opacity:.35}
+  @keyframes float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-30px) scale(1.08)}}
+  .bg-grid{position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+    background-size:56px 56px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 40%,transparent 100%)}
+
+  /* ============ 导航 ============ */
+  header{position:fixed;top:0;left:0;right:0;z-index:50;transition:.35s}
+  .nav{max-width:var(--maxw);margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+  header.scrolled{backdrop-filter:blur(14px);background:rgba(6,7,12,.7);border-bottom:1px solid var(--stroke)}
+  .logo{font-weight:800;letter-spacing:.5px;display:flex;align-items:center;gap:10px;font-size:17px}
+  .logo .dot{width:11px;height:11px;border-radius:50%;background:var(--accent-grad);box-shadow:0 0 14px #7c5cff}
+  .nav-links{display:flex;gap:28px;font-size:14.5px;color:var(--muted)}
+  .nav-links a{position:relative;transition:.25s}
+  .nav-links a:hover{color:#fff}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:2px;background:var(--accent-grad);transition:.3s}
+  .nav-links a:hover::after{width:100%}
+  .nav-cta{padding:9px 18px;border-radius:999px;border:1px solid var(--stroke-strong);font-size:14px;color:#fff;transition:.25s}
+  .nav-cta:hover{background:var(--accent-grad);border-color:transparent;transform:translateY(-1px)}
+  .menu-btn{display:none;background:none;border:1px solid var(--stroke-strong);border-radius:10px;color:#fff;padding:8px 12px;font-size:18px;cursor:pointer}
+
+  /* ============ 通用容器 ============ */
+  section{max-width:var(--maxw);margin:0 auto;padding:96px 24px}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--brand-2);font-weight:600;margin-bottom:16px}
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--brand-2)}
+  h2.title{font-size:clamp(28px,4vw,46px);font-weight:800;line-height:1.15;letter-spacing:-.5px;margin-bottom:14px}
+  .section-sub{color:var(--muted);max-width:640px;font-size:16px}
+  .grad-text{background:var(--accent-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+  /* ============ HERO ============ */
+  .hero{max-width:var(--maxw);margin:0 auto;padding:170px 24px 40px;position:relative}
+  .hero .badge{display:inline-flex;align-items:center;gap:9px;padding:8px 16px;border-radius:999px;border:1px solid var(--stroke);background:rgba(255,255,255,.03);font-size:13.5px;color:var(--muted);margin-bottom:26px}
+  .hero .badge .live{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 10px #4ade80;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .hero h1{font-size:clamp(40px,7vw,86px);line-height:1.02;font-weight:850;letter-spacing:-1.5px;margin-bottom:24px}
+  .hero h1 .line{display:block;overflow:hidden}
+  .hero p.lead{font-size:clamp(16px,2vw,20px);color:var(--muted);max-width:620px;margin-bottom:34px}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:56px}
+  .btn{padding:14px 26px;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;transition:.28s;display:inline-flex;align-items:center;gap:9px;border:1px solid transparent}
+  .btn-primary{background:var(--accent-grad);color:#0a0a12;box-shadow:0 14px 40px -12px rgba(124,92,255,.6)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 20px 50px -12px rgba(124,92,255,.75)}
+  .btn-ghost{border-color:var(--stroke-strong);color:#fff}
+  .btn-ghost:hover{background:rgba(255,255,255,.06);transform:translateY(-2px)}
+
+  /* Hero 数据条 */
+  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;max-width:820px}
+  .stat{padding:22px 20px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1px solid var(--stroke);position:relative;overflow:hidden}
+  .stat::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent-grad);opacity:.7}
+  .stat .num{font-size:clamp(24px,3.2vw,34px);font-weight:850;letter-spacing:-.5px;line-height:1}
+  .stat .lab{font-size:13px;color:var(--faint);margin-top:8px}
+
+  /* ============ Bento 通用卡片 ============ */
+  .bento{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
+  .card{background:linear-gradient(180deg,var(--card),var(--card-2));border:1px solid var(--stroke);border-radius:var(--radius);padding:28px;position:relative;overflow:hidden;transition:transform .4s cubic-bezier(.2,.7,.2,1),border-color .3s}
+  .card:hover{transform:translateY(-5px);border-color:var(--stroke-strong)}
+  .card .spot{position:absolute;width:280px;height:280px;background:radial-gradient(circle,rgba(124,92,255,.18),transparent 70%);border-radius:50%;top:-100px;right:-80px;opacity:0;transition:.5s;pointer-events:none}
+  .card:hover .spot{opacity:1}
+
+  /* ============ 关于 + 技能 ============ */
+  .about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}
+  .about-card h3{font-size:22px;margin-bottom:14px;font-weight:750}
+  .about-card p{color:var(--muted);font-size:15.5px;margin-bottom:14px}
+  .highlight-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+  .chip{padding:7px 14px;border-radius:999px;font-size:13px;background:rgba(124,92,255,.12);border:1px solid rgba(124,92,255,.25);color:#c9beff}
+  .focus-card{display:flex;flex-direction:column;gap:16px}
+  .focus-item{display:flex;gap:14px;align-items:flex-start}
+  .focus-item .ic{flex-shrink:0;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.25);font-size:20px}
+  .focus-item h4{font-size:15.5px;font-weight:700;margin-bottom:2px}
+  .focus-item span{font-size:13.5px;color:var(--faint)}
+
+  /* 技术栈 */
+  .skills-wrap{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  .skill-group h4{font-size:15px;color:var(--brand-2);margin-bottom:14px;font-weight:700;letter-spacing:.5px}
+  .tag-cloud{display:flex;flex-wrap:wrap;gap:9px}
+  .tag{padding:8px 13px;border-radius:10px;font-size:13px;background:rgba(255,255,255,.04);border:1px solid var(--stroke);color:var(--muted);transition:.25s;cursor:default}
+  .tag:hover{color:#fff;border-color:var(--brand);background:rgba(124,92,255,.14);transform:translateY(-2px)}
+
+  /* ============ 工作经历时间线 ============ */
+  .timeline{position:relative;margin-top:20px;padding-left:34px}
+  .timeline::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--brand),var(--brand-2),transparent)}
+  .tl-item{position:relative;margin-bottom:34px}
+  .tl-item:last-child{margin-bottom:0}
+  .tl-item::before{content:"";position:absolute;left:-33px;top:6px;width:18px;height:18px;border-radius:50%;background:var(--bg);border:3px solid var(--brand);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+  .tl-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin-bottom:6px}
+  .tl-role{font-size:19px;font-weight:750}
+  .tl-co{color:var(--brand-2);font-weight:600;font-size:15px}
+  .tl-date{margin-left:auto;font-size:13px;color:var(--faint);font-variant-numeric:tabular-nums}
+  .tl-desc{color:var(--muted);font-size:15px;margin-bottom:12px}
+  .tl-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .tl-list li{position:relative;padding-left:20px;font-size:14.5px;color:var(--muted)}
+  .tl-list li::before{content:"";position:absolute;left:0;top:10px;width:6px;height:6px;border-radius:50%;background:var(--brand-2)}
+  .tl-list li b{color:#fff;font-weight:650}
+
+  /* ============ 项目 Bento ============ */
+  .proj-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
+  .proj{grid-column:span 6}
+  .proj.wide{grid-column:span 12}
+  .proj.small{grid-column:span 4}
+  .proj-card{height:100%;display:flex;flex-direction:column}
+  .proj-meta{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .proj-tag{font-size:12px;padding:5px 11px;border-radius:8px;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.22);color:#7fe6f6;font-weight:600}
+  .proj-date{font-size:12.5px;color:var(--faint);margin-left:auto;font-variant-numeric:tabular-nums}
+  .proj h3{font-size:21px;font-weight:750;margin-bottom:10px;line-height:1.25}
+  .proj .bg-desc{color:var(--muted);font-size:14.5px;margin-bottom:16px}
+  .proj-metrics{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+  .metric{padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid var(--stroke);min-width:96px}
+  .metric .v{font-size:19px;font-weight:800;background:var(--accent-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+  .metric .k{font-size:11.5px;color:var(--faint);margin-top:5px}
+  .proj-points{list-style:none;display:flex;flex-direction:column;gap:7px;margin-top:auto}
+  .proj-points li{position:relative;padding-left:18px;font-size:13.8px;color:var(--muted)}
+  .proj-points li::before{content:"→";position:absolute;left:0;color:var(--brand)}
+
+  /* 项目图集 */
+  .gallery{display:flex;gap:12px;flex-wrap:wrap;margin:6px 0 18px}
+  .shot{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--stroke);cursor:pointer;background:#0a0c15;transition:.3s;width:118px;height:236px}
+  .shot img{width:100%;height:100%;object-fit:cover;display:block;transition:.5s}
+  .shot:hover{border-color:var(--brand);transform:translateY(-4px)}
+  .shot:hover img{transform:scale(1.06)}
+  .shot .zoom{position:absolute;inset:0;background:rgba(5,6,10,.55);display:grid;place-items:center;opacity:0;transition:.3s;font-size:22px}
+  .shot:hover .zoom{opacity:1}
+
+  /* 占位符（后续添加媒体） */
+  .placeholder{border:2px dashed var(--stroke-strong);border-radius:14px;display:grid;place-items:center;text-align:center;color:var(--faint);padding:22px;font-size:13px;background:rgba(255,255,255,.015);transition:.3s;min-height:120px}
+  .placeholder:hover{border-color:var(--brand);color:var(--muted)}
+  .placeholder .pic{font-size:26px;margin-bottom:8px;opacity:.7}
+
+  /* ============ 灯箱 ============ */
+  .lightbox{position:fixed;inset:0;z-index:100;background:rgba(3,4,8,.9);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:40px;flex-direction:column;gap:18px}
+  .lightbox.open{display:flex}
+  .lightbox img{max-width:min(90vw,420px);max-height:80vh;border-radius:18px;border:1px solid var(--stroke-strong);box-shadow:0 30px 80px -20px #000}
+  .lb-close{position:absolute;top:24px;right:28px;font-size:30px;color:#fff;cursor:pointer;background:none;border:none;line-height:1}
+  .lb-cap{color:var(--muted);font-size:14px}
+  .lb-nav{display:flex;gap:16px}
+  .lb-nav button{background:rgba(255,255,255,.08);border:1px solid var(--stroke-strong);color:#fff;padding:10px 20px;border-radius:12px;cursor:pointer;font-size:14px;transition:.25s}
+  .lb-nav button:hover{background:var(--accent-grad);color:#0a0a12}
+
+  /* ============ 页脚 ============ */
+  footer{border-top:1px solid var(--stroke);margin-top:40px}
+  .foot{max-width:var(--maxw);margin:0 auto;padding:56px 24px;text-align:center}
+  .foot h2{font-size:clamp(26px,4vw,40px);font-weight:800;margin-bottom:14px}
+  .foot p{color:var(--muted);max-width:520px;margin:0 auto 28px}
+  .foot-note{margin-top:40px;color:var(--faint);font-size:13px}
+
+  /* ============ 滚动进场动画 ============ */
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}.reveal.d4{transition-delay:.32s}
+
+  /* ============ 响应式 ============ */
+  @media(max-width:900px){
+    .nav-links{display:none}
+    .menu-btn{display:block}
+    .nav-links.mobile-open{display:flex;position:absolute;top:64px;left:16px;right:16px;flex-direction:column;gap:0;background:rgba(11,13,22,.97);border:1px solid var(--stroke);border-radius:16px;padding:8px;backdrop-filter:blur(14px)}
+    .nav-links.mobile-open a{padding:12px 16px;border-radius:10px}
+    .nav-links.mobile-open a:hover{background:rgba(255,255,255,.05)}
+    .about-grid,.skills-wrap{grid-template-columns:1fr}
+    .proj,.proj.small,.proj.wide{grid-column:span 12}
+    .stat-row{grid-template-columns:repeat(2,1fr)}
+    section{padding:72px 20px}
+    .hero{padding:140px 20px 30px}
+  }
+  @media(max-width:480px){
+    .stat-row{grid-template-columns:1fr 1fr;gap:12px}
+    .shot{width:104px;height:208px}
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-orbs"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
+<div class="bg-grid"></div>
+
+<!-- 导航 -->
+<header id="header">
+  <div class="nav">
+    <a href="#top" class="logo"><span class="dot"></span> iOS · Portfolio</a>
+    <nav class="nav-links" id="navlinks">
+      <a href="#about">关于</a>
+      <a href="#skills">技术栈</a>
+      <a href="#experience">工作经历</a>
+      <a href="#projects">项目经历</a>
+      <a href="#contact" class="nav-cta">联系我</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="menu">☰</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero" id="top">
+  <div class="badge reveal"><span class="live"></span> 6 年以上 iOS 客户端开发经验 · 交易导购核心链路</div>
+  <h1 class="reveal d1">
+    <span class="line">构建高性能的</span>
+    <span class="line"><span class="grad-text">iOS 交易与 AI 导购</span></span>
+    <span class="line">体验</span>
+  </h1>
+  <p class="lead reveal d2">
+    资深 iOS 开发工程师，深耕搜索、分类、商卡、搭配与 AI 导购核心链路。擅长复杂业务下的架构设计、性能优化与工程化改造，能从 0 到 1 落地 AI 原生组件与云真机自动化体系。
+  </p>
+  <div class="hero-cta reveal d3">
+    <a href="#projects" class="btn btn-primary">查看项目经历 ↗</a>
+    <a href="#experience" class="btn btn-ghost">工作经历</a>
+  </div>
+  <div class="stat-row reveal d4">
+    <div class="stat"><div class="num grad-text">6<span style="font-size:18px">年+</span></div><div class="lab">iOS 开发经验</div></div>
+    <div class="stat"><div class="num grad-text">150<span style="font-size:18px">+</span></div><div class="lab">业务需求交付</div></div>
+    <div class="stat"><div class="num grad-text">75<span style="font-size:18px">%↓</span></div><div class="lab">首屏渲染耗时</div></div>
+    <div class="stat"><div class="num grad-text">95<span style="font-size:18px">%</span></div><div class="lab">自动化测试成功率</div></div>
+  </div>
+</div>
+
+<!-- 关于 -->
+<section id="about">
+  <div class="eyebrow reveal">About</div>
+  <h2 class="title reveal d1">关于我</h2>
+  <p class="section-sub reveal d2" style="margin-bottom:36px">用数据量化结果，通过技术手段降低业务成本、提升用户体验。</p>
+  <div class="about-grid">
+    <div class="card about-card reveal d1">
+      <div class="spot"></div>
+      <h3>个人优势</h3>
+      <p>6 年以上 iOS 客户端开发经验，深耕 App 搜索、分类、商卡、搭配、AI 导购等核心交易链路。擅长复杂业务场景下的架构设计、性能优化与工程化改造，具备从 0 到 1 落地 AI 原生组件及云真机自动化体系的能力。</p>
+      <p>累计支撑 150+ 业务需求交付，主导多项技术改造与体验优化，善于用数据量化结果、通过技术手段降低业务成本并提升用户体验。</p>
+      <div class="highlight-chips">
+        <span class="chip">架构设计</span>
+        <span class="chip">性能优化</span>
+        <span class="chip">AI 原生组件</span>
+        <span class="chip">动态化渲染</span>
+        <span class="chip">工程化 / 自动化</span>
+        <span class="chip">移动端安全</span>
+      </div>
+    </div>
+    <div class="card focus-card reveal d2">
+      <div class="spot"></div>
+      <div class="focus-item"><div class="ic">⚡</div><div><h4>性能优化</h4><span>首屏预加载、异步渲染、缓存策略、子线程布局</span></div></div>
+      <div class="focus-item"><div class="ic">🤖</div><div><h4>AI 端侧落地</h4><span>LLM 流式对话、SSE 渲染、原生 Markdown、ASR 语音</span></div></div>
+      <div class="focus-item"><div class="ic">🧩</div><div><h4>动态化渲染</h4><span>DX / Ultron 渲染、Mist 模板迁移与组件复用</span></div></div>
+      <div class="focus-item"><div class="ic">🛡️</div><div><h4>移动端安全</h4><span>FPE 价格加密、反爬策略、包大小治理</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 技术栈 -->
+<section id="skills">
+  <div class="eyebrow reveal">Tech Stack</div>
+  <h2 class="title reveal d1">技术栈</h2>
+  <p class="section-sub reveal d2" style="margin-bottom:36px">覆盖 iOS 基础、架构框架、AI 语音、性能优化、工程自动化与安全的全链路能力。</p>
+  <div class="card reveal d1" style="padding:34px">
+    <div class="spot"></div>
+    <div class="skills-wrap">
+      <div class="skill-group">
+        <h4>iOS 基础</h4>
+        <div class="tag-cloud">
+          <span class="tag">Objective-C</span><span class="tag">Swift</span><span class="tag">OC/Swift 混编</span>
+          <span class="tag">UIKit</span><span class="tag">TextKit</span><span class="tag">CoreGraphics</span>
+          <span class="tag">CoreAnimation</span><span class="tag">GCD</span><span class="tag">RunLoop</span><span class="tag">Runtime</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h4>架构与框架</h4>
+        <div class="tag-cloud">
+          <span class="tag">MVVM</span><span class="tag">MVC</span><span class="tag">AOP</span>
+          <span class="tag">DX 动态化</span><span class="tag">Ultron 渲染</span><span class="tag">Mist 模板</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h4>AI 与语音</h4>
+        <div class="tag-cloud">
+          <span class="tag">LLM 对话交互</span><span class="tag">SSE 流式渲染</span><span class="tag">原生 Markdown 渲染</span>
+          <span class="tag">Fun-ASR</span><span class="tag">Qwen-ASR</span><span class="tag">SFSpeech</span><span class="tag">NUI SDK</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h4>性能优化</h4>
+        <div class="tag-cloud">
+          <span class="tag">首屏预加载</span><span class="tag">ViewPool 复用</span><span class="tag">异步渲染</span>
+          <span class="tag">子线程布局</span><span class="tag">DX Size Cache</span><span class="tag">Cell 高度缓存</span><span class="tag">Instruments</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h4>工程化与自动化</h4>
+        <div class="tag-cloud">
+          <span class="tag">Git 工作流</span><span class="tag">埋点体系</span><span class="tag">异常监控</span>
+          <span class="tag">tidevice / go-ios</span><span class="tag">WDA</span><span class="tag">WebDriverAgent</span><span class="tag">CI/CD</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h4>安全与包大小</h4>
+        <div class="tag-cloud">
+          <span class="tag">FPE 价格加密</span><span class="tag">反爬策略</span><span class="tag">无用代码下线</span>
+          <span class="tag">包大小治理</span><span class="tag">无障碍适配</span><span class="tag">长辈模式</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 工作经历 -->
+<section id="experience">
+  <div class="eyebrow reveal">Experience</div>
+  <h2 class="title reveal d1">工作经历</h2>
+  <p class="section-sub reveal d2" style="margin-bottom:14px">主导多个技术改造、性能优化与 AI 工程化专项。</p>
+  <div class="card reveal d1" style="padding:36px 34px">
+    <div class="spot"></div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-head">
+          <span class="tl-role">高级 iOS 开发工程师</span>
+          <span class="tl-date">至今</span>
+        </div>
+        <div class="tl-desc">负责 App 搜索、分类、商卡、搭配、AI 导购等核心导购链路的 iOS 端架构设计与开发，主导多个技术改造、性能优化与 AI 工程化专项。</div>
+        <ul class="tl-list">
+          <li>主导搜索 AI 对话模块建设，推动原生 Markdown 渲染器替代 WebView，<b>首屏渲染耗时下降 75%</b>，内存占用下降 62%，滚动帧率从 45fps 提升至 58fps</li>
+          <li>设计并实现 <b>HMConversationView 通用对话组件</b>，内置 Agent 请求、SSE 流式解析与 DX 动态渲染，支撑多问多答、购物指南、语音购等多场景复用</li>
+          <li>主导语音购项目架构重构与端到端落地，集成 NUI SDK 语音引擎，累计 <b>100+ commits</b></li>
+          <li>主导 iOS 云真机远控与 AI 自动化测试平台建设，<b>WDA 失败率从 35% 降至 4.2%</b>，自动化测试成功率从 86% 提升至 95%</li>
+          <li>负责分类防爬专项，设计动态 FPE 价格加密体系与双保险安全机制，统一三端加解密一致性</li>
+          <li>主导搜索/分类/feeds 列表滑动体验优化，分页滑动帧率≥58fps，卡片渲染耗时降低 30%</li>
+        </ul>
+      </div>
+      <div class="tl-item">
+        <div class="tl-head">
+          <span class="tl-role">iOS 开发工程师</span>
+          <span class="tl-date">早期经历</span>
+        </div>
+        <div class="tl-desc">负责电商/零售类 App 的核心模块开发与性能优化，参与导购链路、会员体系、活动落地页等业务建设。</div>
+        <ul class="tl-list">
+          <li>负责 iOS 会员落地页预加载优化，通过资源预加载与缓存策略提升页面打开速度</li>
+          <li>参与曝光与点击埋点体系改造，统一支持 spm-pre / spm-pre-pre 参数注入，降低接入成本</li>
+          <li>独立完成多个复杂 UI 模块与营销活动页面，保障大促期间线上稳定性</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 项目经历 -->
+<section id="projects">
+  <div class="eyebrow reveal">Projects</div>
+  <h2 class="title reveal d1">项目经历</h2>
+  <p class="section-sub reveal d2" style="margin-bottom:36px">从底层渲染器到 AI 原生落地页，从性能优化到工程化自动化平台。</p>
+
+  <div class="proj-grid">
+
+    <!-- 语音购 -->
+    <div class="proj wide reveal d1">
+      <div class="card proj-card">
+        <div class="spot"></div>
+        <div class="proj-meta">
+          <span class="proj-tag">AI 语音 · 交易链路</span>
+          <span class="proj-date">2025.07 — 2026.07</span>
+        </div>
+        <h3>语音购 · 端到端语音购物能力</h3>
+        <p class="bg-desc">探索语音交互购物场景，在搜索域构建覆盖语音识别、语义理解、商品匹配、语音加购/删除、场景推荐的端到端 iOS 语音购能力。主导架构重构，独立负责语音识别浮层、商品数据管理、语音加购/删除、匹配详情等核心模块。</p>
+        <div class="gallery" data-gallery="voice">
+          <div class="shot" data-src="assets/projects/voice-home-entry.jpg" data-cap="首页 AI 语音加购入口 · 按住说话浮层"><img src="assets/projects/voice-home-entry.jpg" alt="语音加购入口" loading="lazy"><div class="zoom">🔍</div></div>
+          <div class="shot" data-src="assets/projects/voice-hotpot.jpg" data-cap="语音购「火锅吃点什么」· 多组商品一键加购"><img src="assets/projects/voice-hotpot.jpg" alt="语音购火锅场景" loading="lazy"><div class="zoom">🔍</div></div>
+          <div class="shot" data-src="assets/projects/voice-recipe-card.jpg" data-cap="语音购菜谱卡「暖香四位桌」· 识别商品增量合并"><img src="assets/projects/voice-recipe-card.jpg" alt="语音购菜谱卡" loading="lazy"><div class="zoom">🔍</div></div>
+          <div class="shot" data-src="assets/projects/voice-match-detail.jpg" data-cap="「帮你挑」匹配详情面板 · 语音识别到商品匹配的思考过程"><img src="assets/projects/voice-match-detail.jpg" alt="匹配详情面板" loading="lazy"><div class="zoom">🔍</div></div>
+        </div>
+        <div class="proj-metrics">
+          <div class="metric"><div class="v">100+</div><div class="k">commits 覆盖全链路</div></div>
+          <div class="metric"><div class="v">本地分词</div><div class="k">优先匹配 · 降低服务端依赖</div></div>
+          <div class="metric"><div class="v">一键加购</div><div class="k">多组默认勾选 · 缩短转化</div></div>
+        </div>
+        <ul class="proj-points">
+          <li>集成 NUI SDK 语音引擎，完成预初始化预热、强引用泄漏修复、偶现 crash 修复</li>
+          <li>语音识别浮层：动态高度、展开/收起动画、渐变背景、层级管理、页面切换自动隐藏恢复</li>
+          <li>商品数据增量合并：增量合并 + 置顶排序、rebase/final 双接口解析、门店切换清空缓存</li>
+          <li>新增匹配详情面板，展示语音识别到商品匹配的思考过程与状态流转</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- AI 问一问 -->
+    <div class="proj reveal d1">
+      <div class="card proj-card">
+        <div class="spot"></div>
+        <div class="proj-meta">
+          <span class="proj-tag">AI 原生落地页</span>
+          <span class="proj-date">2026.03 — 2026.05</span>
+        </div>
+        <h3>AI 问一问 · 搜索域 AI 问答入口</h3>
+        <p class="bg-desc">从 0 到 1 落地搜索链路中的 AI 问答入口：用户从搜索结果直接进入「问一问」，用文字或语音提问，AI 以流式对话给出结合商品的答案（菜谱、选购建议、多轮澄清等），并支持一键加购。</p>
+        <div class="gallery" data-gallery="ask">
+          <div class="shot" data-src="assets/projects/voice-match-detail.jpg" data-cap="「帮你挑」结果面板 · 富答案卡片体系"><img src="assets/projects/voice-match-detail.jpg" alt="问一问结果面板" loading="lazy"><div class="zoom">🔍</div></div>
+          <div class="placeholder" style="width:118px;height:236px"><div><div class="pic">＋</div>添加截图<br>或演示视频</div></div>
+        </div>
+        <div class="proj-metrics">
+          <div class="metric"><div class="v">0→1</div><div class="k">搜索域首个 AI 落地页</div></div>
+          <div class="metric"><div class="v">基建复用</div><div class="k">直接复用对话组件</div></div>
+        </div>
+        <ul class="proj-points">
+          <li>打通「搜索结果 → 提问 → 流式答案 → 加购」业务闭环，统一多入口发送通道</li>
+          <li>基于 DX 动态化渲染菜谱卡、商品列表卡、多步澄清问卷</li>
+          <li>购物车/价格操作采用先本地乐观更新、再异步对齐服务端策略</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- AI 对话组件 -->
+    <div class="proj reveal d2">
+      <div class="card proj-card">
+        <div class="spot"></div>
+        <div class="proj-meta">
+          <span class="proj-tag">底层基建 · 渲染器</span>
+          <span class="proj-date">2024.01 — 2024.06</span>
+        </div>
+        <h3>AI 对话组件 · 原生 Markdown 渲染</h3>
+        <p class="bg-desc">多个 AI 场景都要承接 LLM 流式对话，早期各业务用 WebView 各自渲染 Markdown，存在首屏慢、内存高、滚动卡顿等问题。用 Objective-C + TextKit 自研原生 Markdown 渲染器替代 WebView，并向上封装 HMConversationView 通用对话组件。</p>
+        <div class="proj-metrics">
+          <div class="metric"><div class="v">↓75%</div><div class="k">首屏 200ms→50ms</div></div>
+          <div class="metric"><div class="v">↓62%</div><div class="k">内存 40MB→15MB</div></div>
+          <div class="metric"><div class="v">58fps</div><div class="k">滚动帧率(45→58)</div></div>
+        </div>
+        <ul class="proj-points">
+          <li>「解析 → 结构化节点 → 内容块 → 原生视图」流水线，针对流式做增量追加渲染</li>
+          <li>组件层内聚网络请求、流式协议解析、DX 商品卡混排、消息持久化、异常重试</li>
+          <li>定义「渲染器 + 对话组件」分层范式，成为问一问、语音购的共同技术底座</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 云真机测试平台 -->
+    <div class="proj reveal d1">
+      <div class="card proj-card">
+        <div class="spot"></div>
+        <div class="proj-meta">
+          <span class="proj-tag">工程化 · 自动化</span>
+          <span class="proj-date">2023.08 — 2025.06</span>
+        </div>
+        <h3>iOS 云真机远控与 AI 自动化测试平台</h3>
+        <p class="bg-desc">iOS 自动化测试长期受困于 tidevice 不稳定、WDA 崩溃、设备掉线等问题。主导将设备控制层从 tidevice 迁移至 go-ios，优化 WDA 稳定性，设计设备健康监控系统与原子指令库。</p>
+        <div class="proj-metrics">
+          <div class="metric"><div class="v">7.1×</div><div class="k">dump 3.2s→0.45s</div></div>
+          <div class="metric"><div class="v">↓88%</div><div class="k">WDA 失败率 35%→4.2%</div></div>
+          <div class="metric"><div class="v">96%</div><div class="k">WDA 自动恢复率</div></div>
+        </div>
+        <ul class="proj-points">
+          <li>基于 go-ios + uhubctl + jq 实现 5 秒轮询，3 次 miss 触发 USB 端口硬件复位</li>
+          <li>构建 12 项通用 + 8 项定制原子指令库，支持测试任务自由组合</li>
+          <li>视频流由 mjpeg 切换为 h264，单帧从 50KB 降至 100–400B，投屏提速 40–50%</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 性能优化 -->
+    <div class="proj reveal d2">
+      <div class="card proj-card">
+        <div class="spot"></div>
+        <div class="proj-meta">
+          <span class="proj-tag">性能优化</span>
+          <span class="proj-date">2023.06 — 2024.12</span>
+        </div>
+        <h3>导购链路性能优化（搜索/分类/feeds）</h3>
+        <p class="bg-desc">搜索、分类、Feeds 等导购列表在滑动分页、复杂 DX 卡片渲染、数据预加载等环节存在卡顿掉帧。优化高频 DX 组件、子线程 Size 计算、分批刷新与预加载预渲染。</p>
+        <div class="proj-metrics">
+          <div class="metric"><div class="v">↓70%</div><div class="k">分类页打开耗时</div></div>
+          <div class="metric"><div class="v">↓30%</div><div class="k">卡片渲染耗时</div></div>
+          <div class="metric"><div class="v">≥58fps</div><div class="k">分页滑动帧率</div></div>
+        </div>
+        <ul class="proj-points">
+          <li>DX 组件视图复用、缓存 CAShapeLayer/CAGradientLayer、自动布局改 frame</li>
+          <li>DX Size 计算移到子线程，开启管线渲染与模板预渲染</li>
+          <li>类目树 RT 从 500ms 优化至 30ms，搜索列表平均 RT 降低 100ms</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 防爬加密 -->
+    <div class="proj small reveal d1">
+      <div class="card proj-card">
+        <div class="spot"></div>
+        <div class="proj-meta"><span class="proj-tag">安全</span></div>
+        <h3>分类防爬与动态价格加密</h3>
+        <p class="bg-desc">设计跨平台一致、性能损耗低、具备动态密钥与异常监控能力的价格加密方案。</p>
+        <ul class="proj-points">
+          <li>动态 FPE 加密算法，保障 iOS/Android/Web 三端结果一致</li>
+          <li>双保险：无线保镖 localKey + 服务端 dynamicParamToK</li>
+          <li>白名单对比监控，实时感知线上价格解析异常</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- DX 迁移 -->
+    <div class="proj small reveal d2">
+      <div class="card proj-card">
+        <div class="spot"></div>
+        <div class="proj-meta"><span class="proj-tag">动态化</span></div>
+        <h3>DX 动态化迁移与 Mist 下线</h3>
+        <p class="bg-desc">将主要链路迁移至 DX 并下线 Mist，统一技术栈、降低维护成本。</p>
+        <ul class="proj-points">
+          <li>搜索/分类 Mist 模板迁移率 100%，Mist 代码全量下线</li>
+          <li>封装营销标、价格、加购按钮等自定义 DX 组件与统一埋点</li>
+          <li>引入 DXDevTools，业务模块零侵入接入本地调试</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 添加更多项目占位 -->
+    <div class="proj small reveal d3">
+      <div class="card proj-card" style="display:grid;place-items:center;min-height:220px">
+        <div class="placeholder" style="border:none;background:none">
+          <div><div class="pic">＋</div>更多项目<br><span style="font-size:12px">后续可继续添加卡片与媒体</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 页脚 / 联系 -->
+<footer id="contact">
+  <div class="foot">
+    <div class="eyebrow reveal" style="justify-content:center">Contact</div>
+    <h2 class="reveal d1">让我们聊聊 <span class="grad-text">iOS 与 AI 端侧</span></h2>
+    <p class="reveal d2">关注 iOS 性能优化、动态化渲染、AI 端侧落地、移动端安全等方向，乐于在团队中推动技术沉淀。欢迎交流合作机会。</p>
+    <div class="hero-cta reveal d3" style="justify-content:center;margin-bottom:0">
+      <a href="#" class="btn btn-primary" id="contactBtn">添加联系方式 ↗</a>
+      <a href="#top" class="btn btn-ghost">回到顶部</a>
+    </div>
+    <div class="foot-note">© <span id="year"></span> iOS Developer Portfolio · 用零依赖 HTML / CSS / JS 构建</div>
+  </div>
+</footer>
+
+<!-- 灯箱 -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lbClose" aria-label="close">×</button>
+  <img id="lbImg" src="" alt="预览" />
+  <div class="lb-cap" id="lbCap"></div>
+  <div class="lb-nav">
+    <button id="lbPrev">← 上一张</button>
+    <button id="lbNext">下一张 →</button>
+  </div>
+</div>
+
+<script>
+  // 年份
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // 导航滚动样式
+  const header = document.getElementById('header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 30);
+  });
+
+  // 移动端菜单
+  const menuBtn = document.getElementById('menuBtn');
+  const navlinks = document.getElementById('navlinks');
+  menuBtn.addEventListener('click', () => navlinks.classList.toggle('mobile-open'));
+  navlinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navlinks.classList.remove('mobile-open')));
+
+  // 滚动进场
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold:.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // 鼠标聚光灯跟随
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      const spot = card.querySelector('.spot');
+      if(spot){ spot.style.left = (e.clientX - r.left - 140) + 'px'; spot.style.top = (e.clientY - r.top - 140) + 'px'; }
+    });
+  });
+
+  // 图集灯箱
+  const shots = Array.from(document.querySelectorAll('.shot'));
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbCap = document.getElementById('lbCap');
+  let curList = [], curIdx = 0;
+
+  function openLb(listAttr, idx){
+    curList = shots.filter(s => s.closest('.gallery').dataset.gallery === listAttr);
+    curIdx = idx;
+    render();
+    lb.classList.add('open');
+  }
+  function render(){
+    const s = curList[curIdx];
+    lbImg.src = s.dataset.src;
+    lbCap.textContent = s.dataset.cap || '';
+  }
+  shots.forEach(s => {
+    s.addEventListener('click', () => {
+      const g = s.closest('.gallery').dataset.gallery;
+      const list = shots.filter(x => x.closest('.gallery').dataset.gallery === g);
+      openLb(g, list.indexOf(s));
+    });
+  });
+  document.getElementById('lbClose').addEventListener('click', () => lb.classList.remove('open'));
+  document.getElementById('lbPrev').addEventListener('click', () => { curIdx = (curIdx - 1 + curList.length) % curList.length; render(); });
+  document.getElementById('lbNext').addEventListener('click', () => { curIdx = (curIdx + 1) % curList.length; render(); });
+  lb.addEventListener('click', (e) => { if(e.target === lb) lb.classList.remove('open'); });
+  document.addEventListener('keydown', (e) => {
+    if(!lb.classList.contains('open')) return;
+    if(e.key === 'Escape') lb.classList.remove('open');
+    if(e.key === 'ArrowLeft') document.getElementById('lbPrev').click();
+    if(e.key === 'ArrowRight') document.getElementById('lbNext').click();
+  });
+
+  // 联系按钮占位提示
+  document.getElementById('contactBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    alert('在此处填入你的联系方式（邮箱 / GitHub / 微信等）。\n打开 index.html 搜索 "contactBtn" 即可自定义此按钮的跳转链接。');
+  });
+</script>
+</body>
+</html>
