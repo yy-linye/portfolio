@@ -56,12 +56,12 @@
   header.scrolled{backdrop-filter:blur(14px);background:rgba(6,7,12,.7);border-bottom:1px solid var(--stroke)}
   .logo{font-weight:800;letter-spacing:.5px;display:flex;align-items:center;gap:10px;font-size:17px}
   .logo .dot{width:11px;height:11px;border-radius:50%;background:var(--accent-grad);box-shadow:0 0 14px #7c5cff}
-  .nav-links{display:flex;gap:28px;font-size:14.5px;color:var(--muted)}
-  .nav-links a{position:relative;transition:.25s}
+  .nav-links{display:flex;gap:28px;font-size:14px;color:var(--muted);align-items:center}
+  .nav-links a{position:relative;transition:.25s;line-height:1.2;padding:9px 0}
   .nav-links a:hover{color:#fff}
-  .nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:2px;background:var(--accent-grad);transition:.3s}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:6px;width:0;height:2px;background:var(--accent-grad);transition:.3s}
   .nav-links a:hover::after{width:100%}
-  .nav-cta{padding:9px 18px;border-radius:999px;border:1px solid var(--stroke-strong);font-size:14px;color:#fff;transition:.25s}
+  .nav-cta{padding:9px 18px;border-radius:999px;border:1px solid var(--stroke-strong);font-size:14px;color:#fff;transition:.25s;line-height:1.2}
   .nav-cta:hover{background:var(--accent-grad);border-color:transparent;transform:translateY(-1px)}
   .menu-btn{display:none;background:none;border:1px solid var(--stroke-strong);border-radius:10px;color:#fff;padding:8px 12px;font-size:18px;cursor:pointer}
 
@@ -145,7 +145,6 @@
   .proj-card{height:100%;display:flex;flex-direction:column}
   .proj-meta{display:flex;align-items:center;gap:10px;margin-bottom:14px}
   .proj-tag{font-size:12px;padding:5px 11px;border-radius:8px;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.22);color:#7fe6f6;font-weight:600}
-  .proj-date{font-size:12.5px;color:var(--faint);margin-left:auto;font-variant-numeric:tabular-nums}
   .proj h3{font-size:21px;font-weight:750;margin-bottom:10px;line-height:1.25}
   .proj .bg-desc{color:var(--muted);font-size:14.5px;margin-bottom:16px}
   .proj-metrics{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
@@ -422,7 +421,6 @@
         <div class="spot"></div>
         <div class="proj-meta">
           <span class="proj-tag">AI 语音 · 交易链路</span>
-          <span class="proj-date">2025.07 — 2026.07</span>
         </div>
         <h3>语音购 · 端到端语音购物能力</h3>
         <p class="bg-desc">探索语音交互购物场景，在搜索域构建覆盖语音识别、语义理解、商品匹配、语音加购/删除、场景推荐的端到端 iOS 语音购能力。主导架构重构，独立负责语音识别浮层、商品数据管理、语音加购/删除、匹配详情等核心模块。</p>
@@ -452,7 +450,6 @@
         <div class="spot"></div>
         <div class="proj-meta">
           <span class="proj-tag">AI 原生落地页</span>
-          <span class="proj-date">2026.03 — 2026.05</span>
         </div>
         <h3>AI 问一问 · 搜索域 AI 问答入口</h3>
         <p class="bg-desc">从 0 到 1 落地搜索链路中的 AI 问答入口：用户从搜索结果直接进入「问一问」，用文字或语音提问，AI 以流式对话给出结合商品的答案（菜谱、选购建议、多轮澄清等），并支持一键加购。</p>
@@ -480,7 +477,6 @@
         <div class="spot"></div>
         <div class="proj-meta">
           <span class="proj-tag">底层基建 · 渲染器</span>
-          <span class="proj-date">2024.01 — 2024.06</span>
         </div>
         <h3>AI 对话组件 · 原生 Markdown 渲染</h3>
         <p class="bg-desc">多个 AI 场景都要承接 LLM 流式对话，早期各业务用 WebView 各自渲染 Markdown，存在首屏慢、内存高、滚动卡顿等问题。用 Objective-C + TextKit 自研原生 Markdown 渲染器替代 WebView，并向上封装 HMConversationView 通用对话组件。</p>
@@ -517,7 +513,6 @@
         <div class="spot"></div>
         <div class="proj-meta">
           <span class="proj-tag">工程化 · 自动化</span>
-          <span class="proj-date">2023.08 — 2025.06</span>
         </div>
         <h3>iOS 云真机远控与 AI 自动化测试平台</h3>
         <p class="bg-desc">iOS 自动化测试长期受困于 tidevice 不稳定、WDA 崩溃、设备掉线等问题。主导将设备控制层从 tidevice 迁移至 go-ios，优化 WDA 稳定性，设计设备健康监控系统与原子指令库。</p>
@@ -544,7 +539,6 @@
         <div class="spot"></div>
         <div class="proj-meta">
           <span class="proj-tag">性能优化</span>
-          <span class="proj-date">2023.06 — 2024.12</span>
         </div>
         <h3>导购链路性能优化（搜索/分类/feeds）</h3>
         <p class="bg-desc">搜索、分类、Feeds 等导购列表在滑动分页、复杂 DX 卡片渲染、数据预加载等环节存在卡顿掉帧。优化高频 DX 组件、子线程 Size 计算、分批刷新与预加载预渲染。</p>
@@ -609,8 +603,9 @@
     <div class="eyebrow reveal" style="justify-content:center">Contact</div>
     <h2 class="reveal d1">让我们聊聊 <span class="grad-text">iOS 与 AI 端侧</span></h2>
     <p class="reveal d2">关注 iOS 性能优化、动态化渲染、AI 端侧落地、移动端安全等方向，乐于在团队中推动技术沉淀。欢迎交流合作机会。</p>
-    <div class="hero-cta reveal d3" style="justify-content:center;margin-bottom:0">
-      <a href="#" class="btn btn-primary" id="contactBtn">添加联系方式 ↗</a>
+    <div class="reveal d3" style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;align-items:center;margin-bottom:32px">
+      <a href="tel:18261454123" class="btn btn-primary">📞 18261454123</a>
+      <a href="mailto:18261454123@163.com" class="btn btn-ghost">✉️ 18261454123@163.com</a>
       <a href="#top" class="btn btn-ghost">回到顶部</a>
     </div>
     <div class="foot-note">© <span id="year"></span> iOS Developer Portfolio · 用零依赖 HTML / CSS / JS 构建</div>
@@ -693,12 +688,6 @@
     if(e.key === 'Escape') lb.classList.remove('open');
     if(e.key === 'ArrowLeft') document.getElementById('lbPrev').click();
     if(e.key === 'ArrowRight') document.getElementById('lbNext').click();
-  });
-
-  // 联系按钮占位提示
-  document.getElementById('contactBtn').addEventListener('click', (e) => {
-    e.preventDefault();
-    alert('在此处填入你的联系方式（邮箱 / GitHub / 微信等）。\n打开 index.html 搜索 "contactBtn" 即可自定义此按钮的跳转链接。');
   });
 </script>
 </body>
