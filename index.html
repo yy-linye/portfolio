@@ -164,6 +164,14 @@
   .shot:hover img{transform:scale(1.06)}
   .shot .zoom{position:absolute;inset:0;background:rgba(5,6,10,.55);display:grid;place-items:center;opacity:0;transition:.3s;font-size:22px}
   .shot:hover .zoom{opacity:1}
+  /* 横屏 PC 截图（16:9），用于云真机等桌面端界面 */
+  .gallery-wide{display:flex;gap:12px;flex-wrap:wrap;margin:6px 0 18px}
+  .shot-wide{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--stroke);cursor:pointer;background:#0a0c15;transition:.3s;flex:1 1 300px;aspect-ratio:16/9}
+  .shot-wide img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;transition:.5s}
+  .shot-wide:hover{border-color:var(--brand);transform:translateY(-4px)}
+  .shot-wide:hover img{transform:scale(1.04)}
+  .shot-wide .zoom{position:absolute;inset:0;background:rgba(5,6,10,.5);display:grid;place-items:center;opacity:0;transition:.3s;font-size:22px}
+  .shot-wide:hover .zoom{opacity:1}
 
   /* 占位符（后续添加媒体） */
   .placeholder{border:2px dashed var(--stroke-strong);border-radius:14px;display:grid;place-items:center;text-align:center;color:var(--faint);padding:22px;font-size:13px;background:rgba(255,255,255,.015);transition:.3s;min-height:120px}
@@ -195,7 +203,7 @@
   /* ============ 灯箱 ============ */
   .lightbox{position:fixed;inset:0;z-index:100;background:rgba(3,4,8,.9);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:40px;flex-direction:column;gap:18px}
   .lightbox.open{display:flex}
-  .lightbox img{max-width:min(90vw,420px);max-height:80vh;border-radius:18px;border:1px solid var(--stroke-strong);box-shadow:0 30px 80px -20px #000}
+  .lightbox img{max-width:min(92vw,1100px);max-height:82vh;border-radius:18px;border:1px solid var(--stroke-strong);box-shadow:0 30px 80px -20px #000}
   .lb-close{position:absolute;top:24px;right:28px;font-size:30px;color:#fff;cursor:pointer;background:none;border:none;line-height:1}
   .lb-cap{color:var(--muted);font-size:14px}
   .lb-nav{display:flex;gap:16px}
@@ -449,8 +457,10 @@
         <h3>AI 问一问 · 搜索域 AI 问答入口</h3>
         <p class="bg-desc">从 0 到 1 落地搜索链路中的 AI 问答入口：用户从搜索结果直接进入「问一问」，用文字或语音提问，AI 以流式对话给出结合商品的答案（菜谱、选购建议、多轮澄清等），并支持一键加购。</p>
         <div class="gallery" data-gallery="ask">
-          <div class="shot" data-src="assets/projects/voice-match-detail.jpg" data-cap="「帮你挑」结果面板 · 富答案卡片体系"><img src="assets/projects/voice-match-detail.jpg" alt="问一问结果面板" loading="lazy"><div class="zoom">🔍</div></div>
-          <div class="placeholder" style="width:118px;height:236px"><div><div class="pic">＋</div>添加截图<br>或演示视频</div></div>
+          <div class="shot" data-src="assets/projects/ask-recipe.jpg" data-cap="流式菜谱卡 · 食材列表 + 一键加购（多组默认勾选）"><img src="assets/projects/ask-recipe.jpg" alt="问一问菜谱卡" loading="lazy"><div class="zoom">🔍</div></div>
+          <div class="shot" data-src="assets/projects/ask-2.jpg" data-cap="结合商品的流式答案 · 新品推荐商品卡混排"><img src="assets/projects/ask-2.jpg" alt="问一问新品推荐" loading="lazy"><div class="zoom">🔍</div></div>
+          <div class="shot" data-src="assets/projects/ask-3.jpg" data-cap="场景卡 + 多步澄清问卷 · 多轮上下文澄清"><img src="assets/projects/ask-3.jpg" alt="问一问场景卡与澄清" loading="lazy"><div class="zoom">🔍</div></div>
+          <div class="shot" data-src="assets/projects/ask-4.jpg" data-cap="富文本答案 · 原生渲染对比表格"><img src="assets/projects/ask-4.jpg" alt="问一问富文本表格" loading="lazy"><div class="zoom">🔍</div></div>
         </div>
         <div class="proj-metrics">
           <div class="metric"><div class="v">0→1</div><div class="k">搜索域首个 AI 落地页</div></div>
@@ -502,7 +512,7 @@
     </div>
 
     <!-- 云真机测试平台 -->
-    <div class="proj reveal d1">
+    <div class="proj wide reveal d1">
       <div class="card proj-card">
         <div class="spot"></div>
         <div class="proj-meta">
@@ -511,6 +521,10 @@
         </div>
         <h3>iOS 云真机远控与 AI 自动化测试平台</h3>
         <p class="bg-desc">iOS 自动化测试长期受困于 tidevice 不稳定、WDA 崩溃、设备掉线等问题。主导将设备控制层从 tidevice 迁移至 go-ios，优化 WDA 稳定性，设计设备健康监控系统与原子指令库。</p>
+        <div class="gallery-wide" data-gallery="cloud">
+          <div class="shot-wide" data-src="assets/projects/cloud-remote.jpg" data-cap="设备远控调试台 · 快捷操作 / AI 测试用例 / Agent 造数 / 应用安装 / 抓包 Mock / 控件结构"><img src="assets/projects/cloud-remote.jpg" alt="云真机远控调试台" loading="lazy"><div class="zoom">🔍</div></div>
+          <div class="shot-wide" data-src="assets/projects/cloud-devices.jpg" data-cap="云真机设备列表 · 各 iPhone 机型系统版本、电量、温度与在线状态监控"><img src="assets/projects/cloud-devices.jpg" alt="云真机设备列表" loading="lazy"><div class="zoom">🔍</div></div>
+        </div>
         <div class="proj-metrics">
           <div class="metric"><div class="v">7.1×</div><div class="k">dump 3.2s→0.45s</div></div>
           <div class="metric"><div class="v">↓88%</div><div class="k">WDA 失败率 35%→4.2%</div></div>
@@ -645,15 +659,15 @@
     });
   });
 
-  // 图集灯箱
-  const shots = Array.from(document.querySelectorAll('.shot'));
+  // 图集灯箱（支持竖屏 .shot 与横屏 .shot-wide）
+  const shots = Array.from(document.querySelectorAll('.shot, .shot-wide'));
   const lb = document.getElementById('lightbox');
   const lbImg = document.getElementById('lbImg');
   const lbCap = document.getElementById('lbCap');
   let curList = [], curIdx = 0;
 
   function openLb(listAttr, idx){
-    curList = shots.filter(s => s.closest('.gallery').dataset.gallery === listAttr);
+    curList = shots.filter(s => s.closest('.gallery, .gallery-wide').dataset.gallery === listAttr);
     curIdx = idx;
     render();
     lb.classList.add('open');
@@ -665,8 +679,8 @@
   }
   shots.forEach(s => {
     s.addEventListener('click', () => {
-      const g = s.closest('.gallery').dataset.gallery;
-      const list = shots.filter(x => x.closest('.gallery').dataset.gallery === g);
+      const g = s.closest('.gallery, .gallery-wide').dataset.gallery;
+      const list = shots.filter(x => x.closest('.gallery, .gallery-wide').dataset.gallery === g);
       openLb(g, list.indexOf(s));
     });
   });
