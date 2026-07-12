@@ -175,8 +175,8 @@
   .arch::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent-grad);opacity:.6}
   .arch-title{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--brand-2);font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
   .arch-title::before{content:"";width:18px;height:1px;background:var(--brand-2)}
-  .arch-flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
-  .arch-node{flex:1;min-width:96px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid var(--stroke);border-radius:12px;padding:12px 10px;text-align:center;transition:.3s;position:relative}
+  .arch-flow{display:flex;align-items:stretch;gap:0;flex-wrap:nowrap}
+  .arch-node{flex:1 1 0;min-width:0;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid var(--stroke);border-radius:12px;padding:12px 8px;text-align:center;transition:.3s;position:relative}
   .arch-node:hover{border-color:var(--brand);transform:translateY(-3px);box-shadow:0 10px 30px -12px rgba(124,92,255,.5)}
   .arch-node .ico{font-size:20px;margin-bottom:6px;line-height:1}
   .arch-node .nm{font-size:13px;font-weight:700;color:#fff;line-height:1.3}
@@ -491,15 +491,6 @@
             <div class="arch-node"><div class="ico">🧱</div><div class="nm">内容块</div><div class="sub">Content Block</div></div>
             <div class="arch-arrow">→</div>
             <div class="arch-node"><div class="ico">📱</div><div class="nm">原生视图</div><div class="sub">TextKit 渲染</div></div>
-          </div>
-          <div class="arch-leaves">
-            <span class="arch-leaf">文本 · TextKit</span>
-            <span class="arch-leaf">图片 · 轻量视图</span>
-            <span class="arch-leaf">表格 · 原生排版</span>
-          </div>
-          <div class="arch-stream">
-            <span class="badge2">↺ 流式增量追加渲染</span>
-            <span>缓冲 + 超时降级保护 · 丢弃过期回包</span>
           </div>
         </div>
         <ul class="proj-points">
