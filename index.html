@@ -277,7 +277,7 @@
   </div>
   <div class="stat-row reveal d4">
     <div class="stat"><div class="num grad-text">10<span style="font-size:18px">年+</span></div><div class="lab">iOS 开发经验</div></div>
-    <div class="stat"><div class="num grad-text">150<span style="font-size:18px">+</span></div><div class="lab">业务需求交付</div></div>
+    <div class="stat"><div class="num grad-text">300<span style="font-size:18px">+</span></div><div class="lab">业务需求交付</div></div>
     <div class="stat"><div class="num grad-text">75<span style="font-size:18px">%↓</span></div><div class="lab">首屏渲染耗时</div></div>
     <div class="stat"><div class="num grad-text">95<span style="font-size:18px">%</span></div><div class="lab">自动化测试成功率</div></div>
   </div>
@@ -293,7 +293,7 @@
       <div class="spot"></div>
       <h3>个人优势</h3>
       <p>10 年以上 iOS 客户端开发经验，深耕 App 搜索、分类、商卡、搭配、AI 导购等核心交易链路。擅长复杂业务场景下的架构设计、性能优化与工程化改造，具备从 0 到 1 落地 AI 原生组件及云真机自动化体系的能力。</p>
-      <p>累计支撑 150+ 业务需求交付，主导多项技术改造与体验优化，善于用数据量化结果、通过技术手段降低业务成本并提升用户体验。</p>
+      <p>累计支撑 300+ 业务需求交付，主导多项技术改造与体验优化，善于用数据量化结果、通过技术手段降低业务成本并提升用户体验。</p>
       <div class="highlight-chips">
         <span class="chip">架构设计</span>
         <span class="chip">性能优化</span>
@@ -517,7 +517,7 @@
           <span class="proj-tag">工程化 · 自动化</span>
         </div>
         <h3>iOS 云真机远控与 AI 自动化测试平台</h3>
-        <p class="bg-desc">iOS 自动化测试长期受困于 tidevice 不稳定、WDA 崩溃、设备掉线等问题。主导将设备控制层从 tidevice 迁移至 go-ios，优化 WDA 稳定性，设计设备健康监控系统与原子指令库。</p>
+        <p class="bg-desc">盒马此前缺少统一的 iOS 设备管理与远程控制能力，测试同学只能人工在实体机上跑用例。从 0 到 1 主导搭建「盒马手机算力平台」的 iOS 侧能力，实现真机管理、远程控制、投屏与自动化测试；后续持续演进稳定性与 AI 自动化能力，将其打磨成企业级的云真机基建。</p>
         <div class="gallery-wide" data-gallery="cloud">
           <div class="shot-wide" data-src="assets/projects/cloud-remote.jpg" data-cap="设备远控调试台 · 快捷操作 / AI 测试用例 / Agent 造数 / 应用安装 / 抓包 Mock / 控件结构"><img src="assets/projects/cloud-remote.jpg" alt="云真机远控调试台" loading="lazy"><div class="zoom">🔍</div></div>
           <div class="shot-wide" data-src="assets/projects/cloud-devices.jpg" data-cap="云真机设备列表 · 各 iPhone 机型系统版本、电量、温度与在线状态监控"><img src="assets/projects/cloud-devices.jpg" alt="云真机设备列表" loading="lazy"><div class="zoom">🔍</div></div>
@@ -525,12 +525,13 @@
         <div class="proj-metrics">
           <div class="metric"><div class="v">7.1×</div><div class="k">dump 3.2s→0.45s</div></div>
           <div class="metric"><div class="v">↓88%</div><div class="k">WDA 失败率 35%→4.2%</div></div>
-          <div class="metric"><div class="v">96%</div><div class="k">WDA 自动恢复率</div></div>
+          <div class="metric"><div class="v">↓60%</div><div class="k">WDA 启动耗时</div></div>
         </div>
         <ul class="proj-points">
-          <li>基于 go-ios + uhubctl + jq 实现 5 秒轮询，3 次 miss 触发 USB 端口硬件复位</li>
-          <li>构建 12 项通用 + 8 项定制原子指令库，支持测试任务自由组合</li>
-          <li>视频流由 mjpeg 切换为 h264，单帧从 50KB 降至 100–400B，投屏提速 40–50%</li>
+          <li>基于 WDA 底座 + iOS 私有 API 直接注入滑动/点击事件，绕过 XCUITest 的查找 application 卡顿；自研 WDA 助手 + 自动化打包分发，告别人工装包</li>
+          <li>设备控制层两次演进：tidevice → go-ios → pymobiledevice3，最终统一至 pymobiledevice3 以完整支持 Apple iOS 17+ 的 CoreDevice / RemoteXPC 隧道协议</li>
+          <li>系统性提升 WDA 稳定性：装饰器统一收敛异常处理、自动重启 + 连接验证 + 重试机制、系统适配率 100%、WDA 自动恢复率 96%</li>
+          <li>设备健康监控系统：5 秒轮询 + 3 次 miss 触发 USB 端口硬件复位；沉淀 8+ 篇技术文档，形成完整技术资产</li>
         </ul>
       </div>
     </div>
